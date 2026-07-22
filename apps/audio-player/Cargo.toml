@@ -4,3 +4,4 @@ edition.workspace = true
 version.workspace = true
 
 [dependencies]
+cpal = "0.18.1"

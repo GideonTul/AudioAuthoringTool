@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "apps/test-rust",
+    "apps/audio-player",
 ]
 
 [workspace.package]
