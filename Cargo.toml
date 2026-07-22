@@ -1,6 +1,9 @@
-[package]
-name = "AudioAuthoringTool"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+resolver = "2"
+members = [
+    "apps/test-rust",
+]
 
-[dependencies]
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
