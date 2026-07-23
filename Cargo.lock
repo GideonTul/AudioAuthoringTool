@@ -25,10 +25,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "audio-player"
+name = "audio-backend"
 version = "0.1.0"
 dependencies = [
  "cpal",
+]
+
+[[package]]
+name = "audio-player"
+version = "0.1.0"
+dependencies = [
+ "audio-backend",
 ]
 
 [[package]]
