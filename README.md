@@ -2,7 +2,7 @@
 This project aims to provide effective audio middleware that allows for more immersive audio
 and more complex audio design.
 
-# Primary Feature Goals
+## Primary Feature Goals
 
 1. __Game Engine Portability__
     * The ability to use this tool with any game engine is, perhaps, the highest priority.
@@ -22,7 +22,7 @@ and more complex audio design.
 6. __GUI__
     * A simple graphical interface.
 
-# Secondary Feature Goals
+## Secondary Feature Goals
 
 1. __Audio Effects__
     * Support for effects like reverb, delay, and compression.
@@ -33,7 +33,7 @@ and more complex audio design.
 3. __Snapshot System__
     * A system for predefining mixes and transitioning to each one smoothly.
 
-# For Developers
+## For Developers
 * I recommend using [this website](https://rust-lang.org/learn/get-started/) for instructions
 on getting Rust setup in your environment. Then just simply clone the repository.
 
@@ -45,7 +45,7 @@ on getting Rust setup in your environment. Then just simply clone the repository
 
 * When adding a dependency you can use: cargo add *dependency* --package app-to-add-dep
 
-***Crates Planned for Use***
+## ***Crates Planned for Use***
 * [*cpal*](https://docs.rs/cpal/latest/cpal/index.html)
 * [*symphonia*](https://docs.rs/symphonia/latest/symphonia/)
 * [*rtrb*](https://docs.rs/rtrb/latest/rtrb/)
