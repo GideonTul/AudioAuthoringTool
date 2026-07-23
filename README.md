@@ -46,5 +46,6 @@ on getting Rust setup in your environment. Then just simply clone the repository
 * When adding a dependency you can use: cargo add *dependency* --package app-to-add-dep
 
 ***Crates Planned for Use***
-* *cpal*
-* *symphonia*
+* [*cpal*](https://docs.rs/cpal/latest/cpal/index.html)
+* [*symphonia*](https://docs.rs/symphonia/latest/symphonia/)
+* [*rtrb*](https://docs.rs/rtrb/latest/rtrb/)
