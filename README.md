@@ -36,3 +36,15 @@ and more complex audio design.
 # For Developers
 * I recommend using [this website](https://rust-lang.org/learn/get-started/) for instructions
 on getting Rust setup in your environment. Then just simply clone the repository.
+
+* Once everything is setup, you can build code by the command: cargo build -p app-to-run
+
+* You can run code by the command: cargo run -p app-to-run
+
+* When adding a new folder to apps or crates, be sure to add it to the "members" list in AudioAuthoringTool/Cargo.toml
+
+* When adding a dependency you can use: cargo add *dependency* --package app-to-add-dep
+
+***Crates Planned for Use***
+* *cpal*
+* *symphonia*
