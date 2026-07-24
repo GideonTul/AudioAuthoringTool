@@ -9,10 +9,10 @@ pub struct AudioFormat {
 
 pub struct AudioBackend {
     stream: Stream,
+    format: AudioFormat,
 }
 
-
-//* 
+//*
 // Will eventually handle errors more gracefully, but for now we will just panic on errors.
 // */
 
@@ -70,11 +70,15 @@ impl AudioBackend {
             _ => unimplemented!(),
         };
 
-        Self { stream }
+        Self { stream, format }
     }
 
     fn err_fn(err: cpal::Error) {
         eprintln!("an error occurred on the output audio stream: {}", err);
+    }
+
+    pub fn format(&self) -> AudioFormat {
+        self.format
     }
 
     pub fn play(&self) -> Result<(), cpal::Error> { self.stream.play() }
