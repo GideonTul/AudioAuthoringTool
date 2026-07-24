@@ -4,4 +4,4 @@ edition.workspace = true
 version.workspace = true
 
 [dependencies]
-audio-backend = {path = "../../crates/audio-backend"}
+audio-backend = {path = "../../lib/audio-backend"}

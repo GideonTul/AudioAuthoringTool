@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
-    "apps/test-rust",
-    "apps/audio-player",
-    "crates/audio-backend",
+    "bin/test-rust",
+    "bin/audio-player",
+    "lib/audio-backend",
 ]
 
 [workspace.package]
