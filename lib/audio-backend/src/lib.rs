@@ -53,7 +53,7 @@ impl AudioBackend {
         };
 
         let callback = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
-        render(data, format.channels, format.sample_rate);
+            render(data, format.channels, format.sample_rate);
         };
 
 
