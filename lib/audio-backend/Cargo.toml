@@ -1,5 +1,5 @@
 [package]
-name = "audio-player"
+name = "audio-backend"
 edition.workspace = true
 version.workspace = true
 
