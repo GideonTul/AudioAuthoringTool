@@ -49,3 +49,34 @@ on getting Rust setup in your environment. Then just simply clone the repository
 * [*cpal*](https://docs.rs/cpal/latest/cpal/index.html)
 * [*symphonia*](https://docs.rs/symphonia/latest/symphonia/)
 * [*rtrb*](https://docs.rs/rtrb/latest/rtrb/)
+
+## ***Project Directory Structure***
+This serves as a guideline of where to place existing and future files within this project.
+
+AudioAuthoringTool/
+├── Cargo.toml           # workspace manifest
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+│
+├── crates/
+│   ├── audio-backend/   # library crate
+│   │   ├── Cargo.toml
+│   │   ├── src/
+│   │   │   └── lib.rs
+│   │   └── tests/       # unit/integration tests
+│   │
+│   └── audio-player/    # binary crate
+│       ├── Cargo.toml
+│       ├── src/
+│       │   └── main.rs
+│       └── tests/       # unit/integration tests
+│
+├── examples/            # shared examples
+│  ├── standalone-example 
+│
+├── docs/                # documentation  
+│  ├── API  
+│  ├── Interface Control Document (ICD) 
+│  ├── Testing Documentation
+│  └── Releaase Notes
