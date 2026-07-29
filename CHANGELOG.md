@@ -1,5 +1,19 @@
 # Changelog
 
+## 7/29/2026
+
+### Added
+* Added directory structure instructions to README
+
+### Changed
+* Changed directory structure
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
 ## 7/24/2026
 
 ### Added
