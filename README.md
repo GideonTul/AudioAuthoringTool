@@ -45,11 +45,6 @@ on getting Rust setup in your environment. Then just simply clone the repository
 
 * When adding a dependency you can use: cargo add *dependency* --package app-to-add-dep
 
-## ***Crates Planned for Use***
-* [*cpal*](https://docs.rs/cpal/latest/cpal/index.html)
-* [*symphonia*](https://docs.rs/symphonia/latest/symphonia/)
-* [*rtrb*](https://docs.rs/rtrb/latest/rtrb/)
-
 ## ***Project Directory Structure***
 This serves as a guideline of where to place existing and future files within this project.
 
@@ -80,3 +75,8 @@ AudioAuthoringTool/
 │  ├── Interface Control Document (ICD) 
 │  ├── Testing Documentation
 │  └── Releaase Notes
+
+## ***Crates Planned for Use***
+* [*cpal*](https://docs.rs/cpal/latest/cpal/index.html)
+* [*symphonia*](https://docs.rs/symphonia/latest/symphonia/)
+* [*rtrb*](https://docs.rs/rtrb/latest/rtrb/)
