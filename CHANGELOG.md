@@ -4,6 +4,7 @@
 
 ### Added
 * Added directory structure instructions to README
+* Added full Symphonia implementation
 
 ### Changed
 * Changed directory structure
