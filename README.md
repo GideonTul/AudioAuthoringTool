@@ -76,6 +76,11 @@ AudioAuthoringTool/
 │  ├── Testing Documentation
 │  └── Releaase Notes
 
+### NOTE FOR DOCS:
+* Rust automatically generates class and library Documentation 
+    - cmd: cargo doc --open
+* We will still need to create broader documentation.
+
 ## ***Crates Planned for Use***
 * [*cpal*](https://docs.rs/cpal/latest/cpal/index.html)
 * [*symphonia*](https://docs.rs/symphonia/latest/symphonia/)

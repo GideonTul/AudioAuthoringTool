@@ -1,6 +1,8 @@
 use crate::source::SampleSource;
 use symphonia::core::errors::Error;
-pub struct MemorySource {
+
+/// Full audio file gets read and decoded upfront, good for small files
+pub struct MemorySource { // might rename
     pub samples: Vec<f32>,
     pub sample_rate: u32,
     pub channels: u16,
@@ -20,10 +22,12 @@ impl SampleSource for MemorySource {
     fn channels(&self) -> u16 {
         self.channels
     }
-    fn read(&mut self, out: &mut [f32]) -> Result<usize, Error> {
+    fn read(&mut self, out_buf: &mut [f32]) -> Result<usize, Error> {
+
         let remaining = self.samples.len() - self.pos;
-        let n = remaining.min(out.len());
-        out[..n].copy_from_slice(&self.samples[self.pos..self.pos + n]);
+        let n = remaining.min(out_buf.len());
+
+        out_buf[..n].copy_from_slice(&self.samples[self.pos..self.pos + n]);
         self.pos += n;
         Ok(n)
     }
@@ -36,9 +40,9 @@ mod tests {
     #[test]
     fn read_in_one_shot_returns_all_samples() {
         let mut source = MemorySource::new(vec![1.0, 2.0, 3.0, 4.0], 44_100, 1);
-        let mut out = [0.0f32; 4];
-        assert_eq!(source.read(&mut out).unwrap(), 4);
-        assert_eq!(out, [1.0, 2.0, 3.0, 4.0]);
+        let mut out_buf = [0.0f32; 4];
+        assert_eq!(source.read(&mut out_buf).unwrap(), 4);
+        assert_eq!(out_buf, [1.0, 2.0, 3.0, 4.0]);
     }
 
     #[test]
@@ -59,9 +63,9 @@ mod tests {
     #[test]
     fn read_after_exhaustion_returns_ok_zero_repeatedly() {
         let mut source = MemorySource::new(vec![1.0, 2.0], 44_100, 1);
-        let mut out = [0.0f32; 8];
-        assert_eq!(source.read(&mut out).unwrap(), 2);
-        assert_eq!(source.read(&mut out).unwrap(), 0, "should be exhausted");
-        assert_eq!(source.read(&mut out).unwrap(), 0, "should stay exhausted, not panic or wrap");
+        let mut out_buf = [0.0f32; 8];
+        assert_eq!(source.read(&mut out_buf).unwrap(), 2);
+        assert_eq!(source.read(&mut out_buf).unwrap(), 0, "should be exhausted");
+        assert_eq!(source.read(&mut out_buf).unwrap(), 0, "should stay exhausted, not panic or wrap");
     }
 }

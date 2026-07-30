@@ -1,3 +1,16 @@
+//! Audio decoding library.
+//! 
+//! Provides a common interface for loading audio files from different
+//! backends and exposing them as PCM sample streams.
+//! # Example
+//!
+//! ```no_run
+//! use audio_decode::{SampleSource, SymphoniaLoader};
+//!
+//! let mut source = SymphoniaLoader::auto("music.mp3")?;
+//! # Ok::<(), Box<dyn std::error::Error>>(())
+//! ```
+
 mod loader;
 mod source;
 mod memory_source;

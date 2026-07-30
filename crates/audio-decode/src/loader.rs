@@ -14,17 +14,20 @@ use crate::streaming_source::StreamingSource;
 
 const AUTO_STREAM_THRESHOLD_BYTES: u64 = 1024 * 1024;
 
+/// Essentially a factory for MemorySource and StreamingSource.
 pub struct SymphoniaLoader;
 
 impl SymphoniaLoader {
     // Fully decodes 'path' into memory at its native sample rate/channels.
     pub fn decode<P: AsRef<Path>>(path: P) -> Result<MemorySource, Error> {
+
         let mut stream = Self::stream(path)?;
         let sample_rate = stream.sample_rate();
         let channels = stream.channels();
 
         let mut samples = Vec::new();
         let mut chunk = [0.0; 4096];
+
         loop {
             let n = stream.read(&mut chunk)?;
             if n == 0 {
@@ -38,6 +41,7 @@ impl SymphoniaLoader {
 
     // Opens 'path' for on-demand decoding
     pub fn stream<P: AsRef<Path>>(path: P) -> Result<StreamingSource, Error> {
+
         let mut format = Self::open_format(&path)?;
         let track = Self::select_track_type(format.as_mut())?;
         let track_id = track.id;
@@ -68,9 +72,7 @@ impl SymphoniaLoader {
     }
 
     fn resolve_auto(path: &Path) -> Result<LoadMode, Error> {
-        // let size = std::fs::metadata(path)
-        // .map(|m| m.len())
-        // .unwrap_or(u64::MAX);
+
         let size = std::fs::metadata(path)?.len();
 
         println!("Size {}", size);
