@@ -7,7 +7,8 @@ pub enum LoadMode {
     Auto,
 }
 
-/// A trait for audio sources that provide PCM sample streams. (Basically an interface)
+/// A trait for audio sources that provide PCM sample streams.
+//  (Basically an interface)
 pub trait SampleSource: Send + 'static {
     fn sample_rate(&self) -> u32;
     fn channels(&self) -> u16;
