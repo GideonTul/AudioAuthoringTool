@@ -55,8 +55,9 @@ impl SymphoniaLoader {
     }
 
     pub fn create<P: AsRef<Path>>(path: P, mode: LoadMode) -> Result<Box<dyn SampleSource>, Error> {
+        let size = std::fs::metadata(&path)?.len();
         let mode = match mode {
-            LoadMode::Auto => Self::resolve_auto(path.as_ref()),
+            LoadMode::Auto => Self::resolve_auto(size),
             explicit => Ok(explicit),
         };
         match mode {
@@ -71,10 +72,7 @@ impl SymphoniaLoader {
         Self::create(path, LoadMode::Auto)
     }
 
-    fn resolve_auto(path: &Path) -> Result<LoadMode, Error> {
-
-        let size = std::fs::metadata(path)?.len();
-
+    fn resolve_auto(size: u64) -> Result<LoadMode, Error> {
         println!("Size {}", size);
         if size < AUTO_STREAM_THRESHOLD_BYTES {
             Ok(LoadMode::Static)
@@ -133,20 +131,17 @@ impl SymphoniaLoader {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::Path;
-
-
 
     #[test]
     fn resolve_auto_picks_static_below_threshold() {
-        let file =  Path::new("tests/assets/Bongos.mp3");
-        assert!(matches!(SymphoniaLoader::resolve_auto(file), Ok(LoadMode::Static)));
+        let size = AUTO_STREAM_THRESHOLD_BYTES - 1;
+        assert!(matches!(SymphoniaLoader::resolve_auto(size), Ok(LoadMode::Static)));
     }
 
     #[test]
     fn resolve_auto_picks_streaming_at_or_above_threshold() {
-        let file =  Path::new("tests/assets/unl1.wav");
-        assert!(matches!(SymphoniaLoader::resolve_auto(file), Ok(LoadMode::Streaming)));
+        let size = AUTO_STREAM_THRESHOLD_BYTES + 1;
+        assert!(matches!(SymphoniaLoader::resolve_auto(size), Ok(LoadMode::Streaming)));
     }
 
 }
