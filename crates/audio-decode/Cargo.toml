@@ -1,0 +1,11 @@
+[package]
+name = "audio-decode"
+edition.workspace = true
+version.workspace = true
+
+[dependencies]
+symphonia = {version="0.6.0", features = ["all"]}
+
+[dev-dependencies]
+hound = "3.5.1"
+tempfile = "3"

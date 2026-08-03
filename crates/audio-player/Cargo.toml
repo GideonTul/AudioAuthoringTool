@@ -4,4 +4,4 @@ edition.workspace = true
 version.workspace = true
 
 [dependencies]
-audio-backend = {path = "../../lib/audio-backend"}
+audio-backend = {path = "../audio-backend"}
