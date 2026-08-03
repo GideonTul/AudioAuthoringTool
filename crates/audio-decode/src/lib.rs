@@ -2,6 +2,7 @@
 //! 
 //! Provides a common interface for loading audio files from different
 //! backends and exposing them as PCM sample streams.
+//! 
 //! # Example
 //!
 //! ```no_run

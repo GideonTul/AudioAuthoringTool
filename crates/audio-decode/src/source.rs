@@ -1,19 +1,13 @@
-/// A source of decoded PCM audio samples.
-///
-/// Samples are always normalized `f32` values and are interleaved by channel.
-///
-/// Currently, the source will either be from Memory (fully decoded file), 
-/// or stream (read and decoded as the file is playing).
-
 use symphonia::core::errors::Error;
 
+/// The mode the audio source is loaded with.
 pub enum LoadMode {
     Static, // might rename later
     Streaming,
     Auto,
 }
 
-// Interface
+/// A trait for audio sources that provide PCM sample streams. (Basically an interface)
 pub trait SampleSource: Send + 'static {
     fn sample_rate(&self) -> u32;
     fn channels(&self) -> u16;
