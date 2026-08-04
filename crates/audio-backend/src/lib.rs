@@ -7,7 +7,7 @@
 //! ``` no_run
 //! # use audio_backend::AudioBackend;
 //! let backend = AudioBackend::new(|data, _format| {
-//!     for sample in data.iter_mut() {
+//!     for sample in data.iter_mut() { // eventually will be conumer.read()
 //!         *sample = 0.0;
 //!     }
 //! }).expect("Failed to initialize backend in test");

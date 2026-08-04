@@ -30,7 +30,7 @@ impl AudioBackend {
     /// Creates a new AudioBackend instance with the given render callback.
     // The render callback is a closure that takes a mutable slice of f32 samples, the number of channels, and the sample rate.
     // may remove the format parameter in the future. (May remove AudioFormat entirely.)
-    pub fn new<F>(mut render: F) -> Result<Self, Box<dyn std::error::Error>>
+    pub fn new<F>(mut callback: F) -> Result<Self, Box<dyn std::error::Error>>
     where
         // FnMut is a trait for closures that can be called multiple times and can mutate their environment.
         F: FnMut(&mut [f32], AudioFormat) + Send + 'static,
@@ -52,7 +52,7 @@ impl AudioBackend {
         };
 
         let callback = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
-            render(data, format);
+            callback(data, format);
         };
 
         // Create the output stream based on the sample format.
