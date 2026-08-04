@@ -43,6 +43,7 @@ fn main() {
     let mut renderer = AudioRenderer::new();
     let finished = renderer.finished();
 
+    // Create an audio stream using the AudioBackend and provide a callback for rendering audio.
     let stream = AudioBackend::new(move |buffer, _, _| {
         renderer.render(buffer, &mut sources);
     });
@@ -50,6 +51,7 @@ fn main() {
     println!("Stream playing...");
     stream.play().unwrap();
 
+    // Wait until the audio stream has finished playing.
     while !finished.load(Ordering::Relaxed) {
         std::thread::sleep(Duration::from_millis(50));
     }
