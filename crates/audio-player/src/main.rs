@@ -7,7 +7,7 @@ fn main() {
         for sample in data.iter_mut() {
             *sample = 0.0;
         }
-    });
+    }).expect("Backend failed");
 
     // Play the stream for 5 seconds, then pause it.
     println!("Stream playing...");

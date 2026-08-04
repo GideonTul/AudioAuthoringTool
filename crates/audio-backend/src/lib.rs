@@ -29,20 +29,17 @@ pub struct AudioBackend {
 // And so the audio can be generated in real time, which I think we will need.
 
 impl AudioBackend {
-    pub fn new<F>(mut render: F) -> Self
+    pub fn new<F>(mut render: F) -> Result<Self, Box<dyn std::error::Error>>
     where
-        F: FnMut(&mut [f32], u16, u32) + Send + 'static, 
-        // FnMut is a trait for closures that can be called multiple times and can mutate their environment.
-        // the Send bound and the 'static lifetime bound are required for the closure to be used in a separate thread.
+        F: FnMut(&mut [f32], u16, u32) + Send + 'static,
     {
         let host = cpal::default_host();
 
-        let device = host.default_output_device()
-                    .expect("Failed to get default output device");
+        let device = host
+            .default_output_device()
+            .ok_or("No output audio device found")?;
 
-        let supported_config = device
-            .default_output_config()
-            .expect("Failed to get default output config");
+        let supported_config = device.default_output_config()?;
 
         let sample_format = supported_config.sample_format();
         let config: StreamConfig = supported_config.into();
@@ -56,21 +53,35 @@ impl AudioBackend {
             render(data, format.channels, format.sample_rate);
         };
 
+        let stream = match sample_format {
+            SampleFormat::F32 => {
+                device.build_output_stream(
+                    config,
+                    callback,
+                    Self::err_fn,
+                    None,
+                )?
+            }
 
-        // We are most likely going to convert audio data to f32
-        // so we will only implement the f32 case for now.
-       let stream = match sample_format {
-            SampleFormat::F32 => device.build_output_stream(
-                config, 
-                callback,
-                Self::err_fn, 
-                None
-            ).expect("Failed to build output stream"),
-
-            _ => unimplemented!(),
+            format => {
+                return Err(
+                    format!("Unsupported sample format: {:?}", format).into()
+                );
+            }
         };
 
-        Self { stream, format }
+        Ok(Self {
+            stream,
+            format,
+        })
+    }
+
+    fn sample_rate(&self) -> u32 {
+        self.format.sample_rate
+    }
+
+    fn channels(&self) -> u16 {
+        self.format.channels
     }
 
     fn err_fn(err: cpal::Error) {
@@ -81,8 +92,15 @@ impl AudioBackend {
         self.format
     }
 
-    pub fn play(&self) -> Result<(), cpal::Error> { self.stream.play() }
-    pub fn pause(&self) -> Result<(), cpal::Error> { self.stream.pause() }
+    pub fn play(&self) -> Result<(), Box<dyn std::error::Error>> {
+        self.stream.play()?;
+        Ok(())
+    }
+
+    pub fn pause(&self) -> Result<(), Box<dyn std::error::Error>> {
+        self.stream.pause()?;
+        Ok(())
+    }
 }
 
 //////////////////////////////////
@@ -110,12 +128,12 @@ mod tests {
             for sample in data.iter_mut() {
                 *sample = 0.0;
             }
-        });
+        }).expect("Failed to initialize backend in test");
 
         // Don't assert specific numbers - they depend on whatever's
         // actually plugged into the machine running this test.
-        assert!(backend.format.channels > 0);
-        assert!(backend.format.sample_rate > 0);
+        assert!(backend.channels() > 0);
+        assert!(backend.sample_rate() > 0);
     }
 
     #[test]
@@ -124,7 +142,7 @@ mod tests {
             for sample in data.iter_mut() {
                 *sample = 0.0;
             }
-        });
+        }).expect("Failed to initialize backend in test");
 
         assert!(backend.play().is_ok());
         std::thread::sleep(std::time::Duration::from_millis(100));
