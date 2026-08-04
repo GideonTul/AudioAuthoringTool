@@ -5,3 +5,6 @@ version.workspace = true
 
 [dependencies]
 audio-decode = {path = "../audio-decode"}
+
+[dev-dependencies]
+symphonia = "0.6.0"
