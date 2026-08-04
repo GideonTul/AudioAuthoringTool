@@ -3,7 +3,7 @@
 use audio_backend::AudioBackend;
 
 fn main() {
-    let stream = AudioBackend::new(|data, _channels, _sample_rate| {
+    let stream = AudioBackend::new(|data, _format| {
         for sample in data.iter_mut() {
             *sample = 0.0;
         }
