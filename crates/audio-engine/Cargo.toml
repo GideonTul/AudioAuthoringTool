@@ -1,0 +1,7 @@
+[package]
+name = "audio-engine"
+edition.workspace = true
+version.workspace = true
+
+[dependencies]
+audio-decode = {path = "../audio-decode"}
