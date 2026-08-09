@@ -11,28 +11,22 @@ use audio_engine::AudioRenderer;
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    println!("Decoding audio...");
     let mut path: &str = "";
-
-    if args.len() > 1 {
-        path = &args[1];
-    }
-    else if path.is_empty() {
-        println!("Usage: cargo run --example audio-player -- <path_to_audio_file>");
-        return;
-    }
 
     let mut sources: Vec<Box<dyn SampleSource>> = Vec::new();
 
-    sources.push(SymphoniaLoader::auto(path).unwrap());
-
-    // Add another sound to demonstrate multiple sources.
-    // sources.push(Box::new(
-    //     SymphoniaLoader::decode_static(
-    //         "path/to/another/audio/file.wav",
-    //     )
-    //     .unwrap(),
-    // ));
+    if args.len() > 1 {
+        for arg in &args[1..] {
+            path = arg;
+            sources.push(SymphoniaLoader::auto(path).unwrap());
+        }
+    }
+    else if path.is_empty() {
+        println!("Usage: cargo run -p audio-player --example simple-player <path_to_audio_file>");
+        return;
+    }
+    
+    println!("Decoding audio...");
 
     println!(
         "Sample rate: {}, Channels: {}",
