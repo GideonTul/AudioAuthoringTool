@@ -1,9 +1,10 @@
 [package]
-name = "audio-player"
+name = "audio-engine"
 edition.workspace = true
 version.workspace = true
 
 [dependencies]
-audio-backend = {path = "../audio-backend"}
 audio-decode = {path = "../audio-decode"}
-audio-engine = {path = "../audio-engine"}
+
+[dev-dependencies]
+symphonia = "0.6.0"
