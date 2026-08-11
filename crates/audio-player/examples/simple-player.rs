@@ -38,12 +38,18 @@ fn main() {
     let finished = renderer.finished();
 
     // Create an audio stream using the AudioBackend and provide a callback for rendering audio.
-    let stream = AudioBackend::new(move |buffer, _, _| {
+    let stream = match AudioBackend::new(move |buffer, _| {
         renderer.render(buffer, &mut sources);
-    });
+    }) {
+        Ok(stream) => stream,
+        Err(e) => {
+            eprintln!("Failed to create audio backend: {e}");
+            return;
+        }
+    };
 
     println!("Stream playing...");
-    stream.play().unwrap();
+    stream.play().expect("Failed to play stream");
 
     // Wait until the audio stream has finished playing.
     while !finished.load(Ordering::Relaxed) {
