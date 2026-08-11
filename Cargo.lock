@@ -41,10 +41,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "audio-engine"
+version = "0.1.0"
+dependencies = [
+ "audio-decode",
+ "symphonia",
+]
+
+[[package]]
 name = "audio-player"
 version = "0.1.0"
 dependencies = [
  "audio-backend",
+ "audio-decode",
+ "audio-engine",
 ]
 
 [[package]]

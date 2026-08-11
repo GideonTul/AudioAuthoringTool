@@ -1,5 +1,25 @@
 # Changelog
 
+## 8/4/2026
+
+### Added
+* Added Symphonia wrapper for reading audio
+* Added simple-player.rs example
+
+### Changed
+* Removed all logic from audio-player/src/main.rs
+* Moved basic rust examples to its own folder
+
+### Breaking Change
+* the code in basic-rust-example may not work since it has been moved around.
+
+### Deprecated
+* basic-rust-example will be removed in the future.
+
+### Removed
+
+### Fixed
+
 ## 7/29/2026
 
 ### Added

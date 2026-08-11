@@ -3,7 +3,7 @@ resolver = "2"
 members = [
     "crates/audio-player",
     "crates/audio-decode",
-    "crates/audio-backend",
+    "crates/audio-backend", "crates/audio-engine",
 ]
 
 [workspace.package]
