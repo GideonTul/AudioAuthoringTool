@@ -83,10 +83,11 @@ impl AudioBackend {
         })
     }
 
+    /// Returns the sample rate of the audio backend.
     pub fn sample_rate(&self) -> u32 {
         self.format.sample_rate
     }
-
+    /// Returns the number of channels of the audio backend.
     pub fn channels(&self) -> u16 {
         self.format.channels
     }
@@ -98,12 +99,12 @@ impl AudioBackend {
     pub fn format(&self) -> AudioFormat {
         self.format
     }
-
+    /// Plays the audio stream.
     pub fn play(&self) -> Result<(), Box<dyn std::error::Error>> {
         self.stream.play()?;
         Ok(())
     }
-
+    /// Pauses the audio stream.
     pub fn pause(&self) -> Result<(), Box<dyn std::error::Error>> {
         self.stream.pause()?;
         Ok(())
