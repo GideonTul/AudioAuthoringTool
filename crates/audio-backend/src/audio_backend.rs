@@ -50,7 +50,7 @@ impl AudioBackend {
             channels: config.channels,
             sample_rate: config.sample_rate,
         };
-
+        // The callback closure is moved into a new closure that matches the signature expected by cpal's build_output_stream method.
         let callback = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
             callback(data, format);
         };
@@ -95,7 +95,7 @@ impl AudioBackend {
     fn err_fn(err: cpal::Error) {
         eprintln!("an error occurred on the output audio stream: {}", err);
     }
-
+    // Returns the AudioFormat of the audio backend.
     pub fn format(&self) -> AudioFormat {
         self.format
     }
