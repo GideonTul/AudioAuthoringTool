@@ -1,5 +1,24 @@
 # Changelog
 
+## 8/10/2026
+
+### Added
+* The errors should be more graceful
+
+### Changed
+* Refactored AudioBackend to a new file
+* Changed AudioBackend new() callback to directly use AudioFormat
+
+### Breaking Change
+* The Callback change
+
+### Deprecated
+* basic-rust-example will be removed in the future.
+
+### Removed
+
+### Fixed
+
 ## 8/4/2026
 
 ### Added
