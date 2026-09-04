@@ -1,5 +1,21 @@
 # Changelog
 
+## 9/4/2026
+
+### Added
+
+### Changed
+
+### Breaking Change
+* Removed basic-rust-example
+
+### Deprecated
+
+### Removed
+* Removed basic-rust-example
+
+### Fixed
+
 ## 8/10/2026
 
 ### Added

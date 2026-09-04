@@ -1,6 +1,0 @@
-[package]
-name = "test-rust"
-edition.workspace = true
-version.workspace = true
-
-[dependencies]
