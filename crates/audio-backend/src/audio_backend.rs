@@ -1,4 +1,4 @@
-use cpal::{SampleFormat, StreamConfig, Stream};
+use cpal::{Device, SampleFormat, Stream, StreamConfig};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 
 /// AudioFormat struct represents the audio format with channels and sample rate.
@@ -10,8 +10,11 @@ pub struct AudioFormat {
 
 /// AudioBackend struct represents the audio backend with a stream and format.
 pub struct AudioBackend {
-    stream: Stream,
+    device: Device,
+    config: StreamConfig,
+    sample_format: SampleFormat,
     format: AudioFormat,
+    stream: Option<Stream>,
 }
 
 // EXPLANATION of AudioBackend::new() in the context of Rust closures and traits:
@@ -27,14 +30,8 @@ pub struct AudioBackend {
 
 /// AudioBackend implementaion
 impl AudioBackend {
-    /// Creates a new AudioBackend instance with the given render callback.
-    // The render callback is a closure that takes a mutable slice of f32 samples, the number of channels, and the sample rate.
-    // may remove the format parameter in the future. (May remove AudioFormat entirely.)
-    pub fn new<F>(mut callback: F) -> Result<Self, Box<dyn std::error::Error>>
-    where
-        // FnMut is a trait for closures that can be called multiple times and can mutate their environment.
-        F: FnMut(&mut [f32], AudioFormat) + Send + 'static,
-    {
+    /// Constructs a new AudioBackend instance with the default output device and configuration.
+    pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
         let host = cpal::default_host();
 
         let device = host
@@ -50,37 +47,51 @@ impl AudioBackend {
             channels: config.channels,
             sample_rate: config.sample_rate,
         };
+
+        Ok(Self {
+            device,
+            config,
+            sample_format,
+            format,
+            stream: None,
+        })
+    }
+
+    /// Gives a render callback to the AudioBackend instance.
+    // The render callback is a closure that takes a mutable slice of f32 samples, the number of channels, and the sample rate.
+    // may remove the format parameter in the future. (May remove AudioFormat entirely.)
+    pub fn start<F>(&mut self, mut callback: F) -> Result<(), Box<dyn std::error::Error>>
+    where
+        // FnMut is a trait for closures that can be called multiple times and can mutate their environment.
+        F: FnMut(&mut [f32], AudioFormat) + Send + 'static,
+    {
+        let format = self.format;
+
         // The callback closure is moved into a new closure that matches the signature expected by cpal's build_output_stream method.
-        let callback = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
+        let wrapped_callback = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
             callback(data, format);
         };
 
         // Create the output stream based on the sample format.
-        let stream = match sample_format {
+        let stream = match self.sample_format {
             // For now, we only support f32 samples. We can add support for other formats later if needed.
             SampleFormat::F32 => {
                 // The build_output_stream method creates a new output stream with the given configuration and callback.
-                device.build_output_stream(
-                    // The configuration for the output stream.
-                    config,
-                    // The callback that will be called when the stream needs more data.
-                    callback,
+                self.device.build_output_stream(
+                    self.config,
+                    wrapped_callback,
                     Self::err_fn,
                     None,
                 )?
             }
 
-            format => {
-                return Err(
-                    format!("Unsupported sample format: {:?}", format).into()
-                );
+            other => {
+                return Err(format!("Unsupported sample format: {:?}", other).into());
             }
         };
 
-        Ok(Self {
-            stream,
-            format,
-        })
+        self.stream = Some(stream);
+        Ok(())
     }
 
     /// Returns the sample rate of the audio backend.
@@ -101,12 +112,18 @@ impl AudioBackend {
     }
     /// Plays the audio stream.
     pub fn play(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.stream.play()?;
+        self.stream
+            .as_ref()
+            .ok_or("Stream not built yet; call start() before play()")?
+            .play()?;
         Ok(())
     }
     /// Pauses the audio stream.
     pub fn pause(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.stream.pause()?;
+        self.stream
+            .as_ref()
+            .ok_or("Stream not built yet; call start() before pause()")?
+            .pause()?;
         Ok(())
     }
 }
@@ -132,11 +149,7 @@ mod tests {
     #[test]
     fn test_audio_backend_creation() {
         // |data, _channels, _sample_rate| is like [](data, _channels, _sample_rate) in cpp.
-        let backend = AudioBackend::new(|data, _format| { 
-            for sample in data.iter_mut() {
-                *sample = 0.0;
-            }
-        }).expect("Failed to initialize backend in test");
+        let backend = AudioBackend::new().expect("Failed to initialize backend in test");
 
         // Don't assert specific numbers - they depend on whatever's
         // actually plugged into the machine running this test.
@@ -146,11 +159,15 @@ mod tests {
 
     #[test]
     fn test_audio_backend_play_pause() {
-        let backend = AudioBackend::new(|data, _format| {
-            for sample in data.iter_mut() {
-                *sample = 0.0;
-            }
-        }).expect("Failed to initialize backend in test");
+        let mut backend = AudioBackend::new().expect("Failed to initialize backend in test");
+
+        backend
+            .start(|data, _format| {
+                for sample in data.iter_mut() {
+                    *sample = 0.0;
+                }
+            })
+            .expect("Failed to start backend stream in test");
 
         assert!(backend.play().is_ok());
         std::thread::sleep(std::time::Duration::from_millis(100));
