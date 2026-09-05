@@ -45,6 +45,8 @@ on getting Rust setup in your environment. Then just simply clone the repository
 
 * When adding a dependency you can use: cargo add *dependency* --package app-to-add-dep
 
+* To run simple player example: cargo run -p audio-player --example simple-player "path/to/audio/file.mp3"
+
 ## ***Project Directory Structure***
 This serves as a guideline of where to place existing and future files within this project.
 
