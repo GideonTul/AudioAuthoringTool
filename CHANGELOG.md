@@ -1,5 +1,21 @@
 # Changelog
 
+## 9/9/2026
+
+### Added
+* Voice and VoiceMixer structs
+
+### Changed
+* Simple player now uses the new structs rather than AudioRendeder
+
+### Breaking Change
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
 ## 9/4/2026
 
 ### Added
