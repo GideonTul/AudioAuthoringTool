@@ -5,21 +5,20 @@ use std::sync::{
 use std::time::Duration;
 
 use audio_backend::AudioBackend;
-use audio_decode::LoadMode::Streaming;
 use audio_decode::{SampleSource, SymphoniaLoader};
-use audio_engine::AudioRenderer;
+use audio_engine::VoiceMixer;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     let mut path: &str = "";
 
-    let mut sources: Vec<Box<dyn SampleSource>> = Vec::new();
+    let mut mixer = VoiceMixer::new();
 
     if args.len() > 1 {
         for arg in &args[1..] {
             path = arg;
-            sources.push(SymphoniaLoader::auto(path).unwrap());
+            mixer.add_voice(SymphoniaLoader::auto(path).unwrap(), 1.0);
         }
     }
     else if path.is_empty() {
@@ -29,14 +28,8 @@ fn main() {
     
     println!("Decoding audio...");
 
-    println!(
-        "Sample rate: {}, Channels: {}",
-        sources[0].sample_rate(),
-        sources[0].channels()
-    );
-
-    let mut renderer = AudioRenderer::new();
-    let finished = renderer.finished();
+    // let mut renderer = AudioRenderer::new();
+    let finished = mixer.finished();
     let mut backend = match AudioBackend::new() {
         Ok(backend) => backend,
         Err(e) => {
@@ -47,7 +40,8 @@ fn main() {
 
     // start() is what actually builds the stream, wiring in this callback.
     if let Err(e) = backend.start(move |buffer, _| {
-        renderer.render(buffer, &mut sources);
+        // renderer.render(buffer, &mut sources);
+        mixer.render(buffer);
     }) {
         eprintln!("Failed to start audio backend: {e}");
         return;

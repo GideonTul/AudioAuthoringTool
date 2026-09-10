@@ -83,7 +83,7 @@ impl SymphoniaLoader {
 
     // Determines whether to load the audio file at 'path' into memory or to stream it based on its size.
     fn resolve_auto(size: u64) -> Result<LoadMode, Error> {
-        println!("Size {}", size);
+        // println!("Size {}", size);
         if size < AUTO_STREAM_THRESHOLD_BYTES {
             Ok(LoadMode::Static)
         } else {
